@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 /**
@@ -28,6 +30,13 @@ public class TabRoomFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private ListView listView;
+    private ArrayAdapter<String> arrayAdapter;
+
+    private String[] rooms = {"Living Room", "Main Bedroom", "Guest Bedroom 1", "Guest Bedroom 2",
+                              "Kitchen", "Bathroom"};
+
 
     public TabRoomFragment() {
         // Required empty public constructor
@@ -58,13 +67,23 @@ public class TabRoomFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab_room, container, false);
+        View view = inflater.inflate(R.layout.fragment_tab_room, container, false);
+
+
+
+        arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_tab, rooms);
+        listView = (ListView) view.findViewById(R.id.tab_rooms_listview);
+        listView.setAdapter(arrayAdapter);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
