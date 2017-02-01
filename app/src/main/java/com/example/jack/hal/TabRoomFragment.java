@@ -1,12 +1,15 @@
 package com.example.jack.hal;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -33,6 +36,7 @@ public class TabRoomFragment extends Fragment {
 
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
+    private CustomAnimation customAnimation;
 
     private String[] rooms = {"Living Room", "Main Bedroom", "Guest Bedroom 1", "Guest Bedroom 2",
                               "Kitchen", "Bathroom"};
@@ -76,12 +80,13 @@ public class TabRoomFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_room, container, false);
-
+        customAnimation = new CustomAnimation();
 
 
         arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_tab, rooms);
         listView = (ListView) view.findViewById(R.id.tab_rooms_listview);
         listView.setAdapter(arrayAdapter);
+        listView.setOnItemClickListener(new RoomsItemListener());
 
         return view;
     }
@@ -123,5 +128,15 @@ public class TabRoomFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class RoomsItemListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent sampleRoom = new Intent(getActivity(), RoomActivity.class);
+            getActivity().startActivity(sampleRoom);
+
+        }
     }
 }
