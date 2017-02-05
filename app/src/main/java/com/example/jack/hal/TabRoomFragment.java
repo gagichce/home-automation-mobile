@@ -36,8 +36,6 @@ public class TabRoomFragment extends Fragment {
 
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
-    private CustomAnimation customAnimation;
-
     private String[] rooms = {"Living Room", "Main Bedroom", "Guest Bedroom 1", "Guest Bedroom 2",
                               "Kitchen", "Bathroom"};
 
@@ -80,8 +78,6 @@ public class TabRoomFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_room, container, false);
-        customAnimation = new CustomAnimation();
-
 
         arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_tab, rooms);
         listView = (ListView) view.findViewById(R.id.tab_rooms_listview);
@@ -134,7 +130,12 @@ public class TabRoomFragment extends Fragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
             Intent sampleRoom = new Intent(getActivity(), RoomActivity.class);
+
+            String room_name = parent.getItemAtPosition(position).toString();
+
+            sampleRoom.putExtra("room_name", room_name);
             getActivity().startActivity(sampleRoom);
 
         }
