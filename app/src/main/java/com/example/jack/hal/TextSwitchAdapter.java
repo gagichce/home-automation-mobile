@@ -9,10 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
+
 
 /**
  * Created by Jack on 2017-02-05.
@@ -23,6 +35,8 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
     private Context context;
     private int layoutResourceId;
     private TextSwitch[] data;
+    private Constant constant = new Constant();
+    HttpURLConnection urlConnection;
 
 
 
@@ -50,43 +64,51 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
 
         label.setText(textSwitch.getLabel());
 
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
+
+                if (isChecked) {
+                    try {
+                        URL url = new URL(constant.light_off);
+                        urlConnection = (HttpURLConnection) url.openConnection();
+
+                        urlConnection.setDoOutput(true);
+
+                        StringBuilder builder = new StringBuilder();
+
+                        builder.append(String.valueOf(urlConnection.getResponseCode()))
+                                .append(" ")
+                                .append(urlConnection.getResponseMessage())
+                                .append("\n");
+
+                        Toast.makeText(getContext(), builder, Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                } else {
+                    try {
+                        URL url = new URL(constant.light_on);
+                        urlConnection = (HttpURLConnection) url.openConnection();
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+        }});
+
         return convertView;
 
     }
-//    @NonNull
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        View row = convertView;
-//        TextSwitchHolder holder = null;
-//
-//
-//        if (row == null) {
-//            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-//            row = inflater.inflate(layoutResourceId, parent, false);
-//
-//            holder = new TextSwitchHolder();
-//            holder.label = (TextView)row.findViewById(R.id.light_room_text);
-//            holder.aSwitch = (Switch)row.findViewById(R.id.light_switch);
-//
-//            row.setTag(holder);
-//        } else {
-//            holder = (TextSwitchHolder) row.getTag();
-//        }
-//
-//
-//        TextSwitch textSwitch = data[position];
-//        holder.label.setText(textSwitch.getLabel());
-//        holder.aSwitch.setChecked(textSwitch.getisChecked());
-//
-//        return row;
-//
-//    }
-//
-//
-//    static class TextSwitchHolder {
-//        TextView label;
-//        Switch aSwitch;
-//    }
+
 
 
 }
