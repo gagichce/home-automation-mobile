@@ -6,19 +6,7 @@ import java.util.HashMap;
  * Created by Jack on 2017-02-05.
  */
 
-public class Constant {
-
-    public static final String light_on_1 = "http://192.168.254.2:3000/api/2/1/1";
-    public static final String light_off_1 = "http://192.168.254.2:3000/api/2/1/0";
-
-    public static final String light_on_2 = "http://192.168.254.2:3000/api/2/1/1";
-    public static final String light_off_2 = "http://192.168.254.2:3000/api/2/1/0";
-
-    public static final String light_on_3 = "http://192.168.254.2:3000/api/2/1/1";
-    public static final String light_off_3 = "http://192.168.254.2:3000/api/2/1/0";
-
-    public static final String light_on_4 = "http://192.168.254.2:3000/api/2/1/1";
-    public static final String light_off_4 = "http://192.168.254.2:3000/api/2/1/0";
+public final class Constant {
 
     public static final HashMap<String, String> on_url = new HashMap<>();
     public static final HashMap<String, String> off_url = new HashMap<>();

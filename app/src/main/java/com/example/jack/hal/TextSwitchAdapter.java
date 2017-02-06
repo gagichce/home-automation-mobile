@@ -68,15 +68,11 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-
                 if (isChecked) {
                     new HttpAsynTask().execute("off", light_num);
                 } else {
                     new HttpAsynTask().execute("on", light_num);
                 }
-
-
         }});
 
         return convertView;

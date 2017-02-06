@@ -20,8 +20,6 @@ import java.io.IOException;
 
 public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
-    Constant constant = new Constant();
-
     @Override
     protected Boolean doInBackground(String... params) {
         try {
@@ -29,9 +27,9 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
             HttpGet httppost;
             String light_num = params[1];
             if (params[0] == "on") {
-                httppost  = new HttpGet(constant.on_url.get(light_num));
+                httppost  = new HttpGet(Constant.on_url.get(light_num));
             } else {
-                httppost = new HttpGet(constant.off_url.get(light_num));
+                httppost = new HttpGet(Constant.off_url.get(light_num));
             }
             //------------------>>
 

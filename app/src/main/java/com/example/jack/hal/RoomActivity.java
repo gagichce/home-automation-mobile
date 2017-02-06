@@ -16,7 +16,7 @@ public class RoomActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView listView;
-    private String[] appliance = {"Light 1", "light 2", "light 3", "light 4"};
+    private String[] appliance = {"Light 1", "Light 2", "Light 3", "Light 4"};
     private ArrayAdapter<String> arrayAdapter;
     private String room_name;
 
@@ -51,6 +51,7 @@ public class RoomActivity extends AppCompatActivity {
                     case 1:
                     case 2:
                     case 3:
+                    default:
                         String light_num = parent.getItemAtPosition(position).toString();
 
                         Intent lightIntent = new Intent(getApplicationContext(), LightActivity.class);
