@@ -36,15 +36,16 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
     private int layoutResourceId;
     private TextSwitch[] data;
     private Constant constant = new Constant();
-    HttpURLConnection urlConnection;
+    private String light_num;
 
 
 
-    public TextSwitchAdapter(Context context, int layoutResourceId, TextSwitch[] data) {
+    public TextSwitchAdapter(Context context, int layoutResourceId, TextSwitch[] data, String light_num) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
+        this.light_num = light_num.substring(light_num.length() - 1);
 
     }
 
@@ -69,44 +70,10 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 
-
                 if (isChecked) {
-                    try {
-                        URL url = new URL(constant.light_off);
-                        urlConnection = (HttpURLConnection) url.openConnection();
-
-                        //urlConnection.setDoOutput(true);
-
-                        StringBuilder builder = new StringBuilder();
-
-                        builder.append(String.valueOf(urlConnection.getResponseCode()))
-                                .append(" ")
-                                .append(urlConnection.getResponseMessage())
-                                .append("\n");
-
-                        Toast.makeText(getContext(), builder, Toast.LENGTH_SHORT).show();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
+                    new HttpAsynTask().execute("off", light_num);
                 } else {
-                    try {
-                        URL url = new URL(constant.light_on);
-                        urlConnection = (HttpURLConnection) url.openConnection();
-
-                        StringBuilder builder = new StringBuilder();
-
-                        builder.append(String.valueOf(urlConnection.getResponseCode()))
-                                .append(" ")
-                                .append(urlConnection.getResponseMessage())
-                                .append("\n");
-
-                        Toast.makeText(getContext(), builder, Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    new HttpAsynTask().execute("on", light_num);
                 }
 
 

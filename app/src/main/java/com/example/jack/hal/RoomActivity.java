@@ -16,7 +16,7 @@ public class RoomActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView listView;
-    private String[] appliance = {"Light", "Curtains"};
+    private String[] appliance = {"Light 1", "light 2", "light 3", "light 4"};
     private ArrayAdapter<String> arrayAdapter;
     private String room_name;
 
@@ -48,14 +48,18 @@ public class RoomActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        String light_num = parent.getItemAtPosition(position).toString();
+
                         Intent lightIntent = new Intent(getApplicationContext(), LightActivity.class);
                         lightIntent.putExtra("appliance_name", appliance_name);
                         lightIntent.putExtra("room_name", room_name);
+                        lightIntent.putExtra("light_num", light_num);
                         startActivity(lightIntent);
                         break;
-                    case 1:
-                        Toast.makeText(getApplicationContext(), "Curtains is pressed", Toast.LENGTH_SHORT).show();
-                        break;
+
                 }
             }
         });
