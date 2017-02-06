@@ -75,7 +75,7 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
                         URL url = new URL(constant.light_off);
                         urlConnection = (HttpURLConnection) url.openConnection();
 
-                        urlConnection.setDoOutput(true);
+                        //urlConnection.setDoOutput(true);
 
                         StringBuilder builder = new StringBuilder();
 
@@ -96,7 +96,14 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
                         URL url = new URL(constant.light_on);
                         urlConnection = (HttpURLConnection) url.openConnection();
 
+                        StringBuilder builder = new StringBuilder();
 
+                        builder.append(String.valueOf(urlConnection.getResponseCode()))
+                                .append(" ")
+                                .append(urlConnection.getResponseMessage())
+                                .append("\n");
+
+                        Toast.makeText(getContext(), builder, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
