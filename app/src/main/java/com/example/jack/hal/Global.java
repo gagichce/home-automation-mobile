@@ -6,10 +6,11 @@ import java.util.HashMap;
  * Created by Jack on 2017-02-05.
  */
 
-public final class Constant {
+public final class Global {
 
     public static final HashMap<String, String> on_url = new HashMap<>();
     public static final HashMap<String, String> off_url = new HashMap<>();
+    public static HashMap<String, Boolean> states = new HashMap<>();
 
 
     static {

@@ -4,9 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Switch;
 
 public class LightActivity extends AppCompatActivity {
 
@@ -37,7 +35,7 @@ public class LightActivity extends AppCompatActivity {
 
         listView_switch = (ListView)findViewById(R.id.light_listview);
 
-        textSwitchAdapter = new TextSwitchAdapter(this, R.layout.layout_tab, textSwitches, light_num);
+        textSwitchAdapter = new TextSwitchAdapter(this, R.layout.layout_single_textview, textSwitches, light_num);
         listView_switch.setAdapter(textSwitchAdapter);
     }
 

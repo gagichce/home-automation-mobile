@@ -1,6 +1,5 @@
 package com.example.jack.hal;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -79,7 +78,7 @@ public class TabRoomFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_room, container, false);
 
-        arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_tab, rooms);
+        arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_single_textview, rooms);
         listView = (ListView) view.findViewById(R.id.tab_rooms_listview);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new RoomsItemListener());

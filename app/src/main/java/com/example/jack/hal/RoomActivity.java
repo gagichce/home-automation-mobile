@@ -1,7 +1,6 @@
 package com.example.jack.hal;
 
 import android.content.Intent;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class RoomActivity extends AppCompatActivity {
 
@@ -37,7 +35,7 @@ public class RoomActivity extends AppCompatActivity {
 
         listView = (ListView)findViewById(R.id.sampleroom_listview);
 
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.layout_tab, appliance);
+        arrayAdapter = new ArrayAdapter<>(this, R.layout.layout_single_textview, appliance);
         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

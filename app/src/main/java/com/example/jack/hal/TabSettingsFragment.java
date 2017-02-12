@@ -75,7 +75,7 @@ public class TabSettingsFragment extends Fragment {
 
 
 
-        arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_tab, rooms);
+        arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_single_textview, rooms);
         listView = (ListView) view.findViewById(R.id.tab_settings_listview);
         listView.setAdapter(arrayAdapter);
 

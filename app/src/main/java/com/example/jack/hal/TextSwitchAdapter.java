@@ -1,29 +1,14 @@
 package com.example.jack.hal;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
 
 
 /**
@@ -35,7 +20,7 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
     private Context context;
     private int layoutResourceId;
     private TextSwitch[] data;
-    private Constant constant = new Constant();
+    private Global global = new Global();
     private String light_num;
 
 

@@ -1,7 +1,6 @@
 package com.example.jack.hal;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,9 +26,9 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
             HttpGet httppost;
             String light_num = params[1];
             if (params[0] == "on") {
-                httppost  = new HttpGet(Constant.on_url.get(light_num));
+                httppost  = new HttpGet(Global.on_url.get(light_num));
             } else {
-                httppost = new HttpGet(Constant.off_url.get(light_num));
+                httppost = new HttpGet(Global.off_url.get(light_num));
             }
             //------------------>>
 
