@@ -40,6 +40,7 @@ public class StateChecker extends AsyncTask<String, Void, JSONArray> {
 
         if (jsonArray == null) {
             Global.isServerUp = false;
+            return;
         }
 
         Global.isServerUp = true;

@@ -83,7 +83,7 @@ public class RoomActivity extends BaseActivity {
                         lightIntent.putExtra("room_name", room_name);
                         lightIntent.putExtra("light_num", appliance_name);
                         lightIntent.putExtra("light_state", appliance_state);
-                        Toast.makeText(getApplicationContext(), "the current state is: " + appliance_state, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "the current state is: " + appliance_state, Toast.LENGTH_SHORT).show();
                         startActivity(lightIntent);
                         break;
 

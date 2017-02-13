@@ -42,7 +42,7 @@ public class LightActivity extends BaseActivity {
         String light_state_str = getIntent().getStringExtra("light_state");
         light_state = light_state_str.equals("on") ? true : false;
 
-        Toast.makeText(this, "Light_State is " + Boolean.toString(light_state), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Light_State is " + Boolean.toString(light_state), Toast.LENGTH_SHORT).show();
 
         textSwitches = new TextSwitch[] { new TextSwitch("On/Off", R.id.light_switch, light_state) };
 
