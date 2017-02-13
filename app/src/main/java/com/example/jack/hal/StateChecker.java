@@ -25,29 +25,33 @@ public class StateChecker extends AsyncTask<String, Void, JSONArray> {
 
     private static final String stateAPI = "http://10.0.2.2:3000/api/current-state";
 
-    private boolean statecodeToBool(String statecode) {
-        if (statecode != "0" || statecode != "1") {
+    private Global.APPLIANCE_STATE statecodeToState(int statecode) {
+        if (statecode != 0 || statecode != 1) {
             // todo error
         }
 
-        int code = Integer.parseInt(statecode);
-        return code == 0 ? false : true;
+        return statecode == 0 ? Global.APPLIANCE_STATE.OFF : Global.APPLIANCE_STATE.ON;
     }
+
 
 
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
-//        super.onPostExecute(jsonArray);
-//
+        if(android.os.Debug.isDebuggerConnected()) {
+            android.os.Debug.waitForDebugger();
+
+        }
+
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
-                if (obj.get("id") == "1") {
-                    Global.states.put("1", statecodeToBool((String)obj.get("relay_one")));
-                    Global.states.put("2", statecodeToBool((String)obj.get("relay_two")));
-                } else if (obj.get("id") == "2") {
-                    Global.states.put("3", statecodeToBool((String)obj.get("relay_three")));
-                    Global.states.put("4", statecodeToBool((String)obj.get("relay_four")));
+                if ((Integer)obj.get("id") == 1) {
+                    Global.states.put("Light 1", statecodeToState((Integer)obj.get("relay_one")));
+                    Global.states.put("Light 2", statecodeToState((Integer)obj.get("relay_two")));
+                    Log.d("Light 2: ",  Global.states.get("Light 2").toString());
+                } else if ((Integer)obj.get("id") == 2) {
+                    Global.states.put("Light 3", statecodeToState((Integer)obj.get("relay_one")));
+                    Global.states.put("Light 4", statecodeToState((Integer)obj.get("relay_two")));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

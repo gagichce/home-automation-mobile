@@ -50,6 +50,8 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
 
         label.setText(textSwitch.getLabel());
 
+        aSwitch.setChecked(textSwitch.getisChecked());
+
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

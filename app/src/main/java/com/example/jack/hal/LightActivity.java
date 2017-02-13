@@ -11,10 +11,11 @@ public class LightActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ListView listView_switch;
     private TextSwitchAdapter textSwitchAdapter;
-    private TextSwitch[] textSwitches = { new TextSwitch("On/Off", R.id.light_switch, false) };
+    private TextSwitch[] textSwitches ;
     private String appliance_name;
     private String room_name;
     private String light_num;
+    private boolean light_state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,10 @@ public class LightActivity extends AppCompatActivity {
         room_name = getIntent().getStringExtra("room_name");
         appliance_name = getIntent().getStringExtra("appliance_name");
         light_num = getIntent().getStringExtra("light_num");
+        String light_state_str = getIntent().getStringExtra("light_state");
+        light_state = light_state_str.equals("on") ? true : false;
+
+        textSwitches = new TextSwitch[] { new TextSwitch("On/Off", R.id.light_switch, light_state) };
 
 
         toolbar = (Toolbar)findViewById(R.id.toolbar_light);

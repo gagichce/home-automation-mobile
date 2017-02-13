@@ -134,6 +134,9 @@ public class TabRoomFragment extends Fragment {
 
             String room_name = parent.getItemAtPosition(position).toString();
 
+
+
+
             sampleRoom.putExtra("room_name", room_name);
             getActivity().startActivity(sampleRoom);
 

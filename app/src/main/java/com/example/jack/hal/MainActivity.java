@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements TabRoomFragment.O
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        new StateChecker().execute();
+
 
 
     }
