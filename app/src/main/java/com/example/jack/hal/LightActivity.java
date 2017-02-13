@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class LightActivity extends AppCompatActivity {
+public class LightActivity extends BaseActivity {
 
-    private Toolbar toolbar;
     private ListView listView_switch;
     private TextSwitchAdapter textSwitchAdapter;
     private TextSwitch[] textSwitches ;
@@ -17,10 +17,24 @@ public class LightActivity extends AppCompatActivity {
     private String light_num;
     private boolean light_state;
 
+
+    @Override
+    protected String getToolBarTitle() {
+        room_name = getIntent().getStringExtra("room_name");
+        appliance_name = getIntent().getStringExtra("appliance_name");
+
+        return room_name + "/" + appliance_name;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_light;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_light);
+//        setContentView(R.layout.activity_light);
 
         room_name = getIntent().getStringExtra("room_name");
         appliance_name = getIntent().getStringExtra("appliance_name");
@@ -28,15 +42,9 @@ public class LightActivity extends AppCompatActivity {
         String light_state_str = getIntent().getStringExtra("light_state");
         light_state = light_state_str.equals("on") ? true : false;
 
+        Toast.makeText(this, "Light_State is " + Boolean.toString(light_state), Toast.LENGTH_SHORT).show();
+
         textSwitches = new TextSwitch[] { new TextSwitch("On/Off", R.id.light_switch, light_state) };
-
-
-        toolbar = (Toolbar)findViewById(R.id.toolbar_light);
-        toolbar.setTitle(room_name + "/" + appliance_name);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         listView_switch = (ListView)findViewById(R.id.light_listview);
 

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jack.hal">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,10 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RoomActivity" />
-        <activity android:name=".LightActivity"></activity>
+        <activity android:name=".LightActivity" />
+        <activity android:name=".BaseActivity"></activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
 
 </manifest>

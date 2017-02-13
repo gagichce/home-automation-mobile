@@ -37,21 +37,26 @@ public class StateChecker extends AsyncTask<String, Void, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
-        if(android.os.Debug.isDebuggerConnected()) {
-            android.os.Debug.waitForDebugger();
 
+        if (jsonArray == null) {
+            Global.isServerUp = false;
         }
+
+        Global.isServerUp = true;
 
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 if ((Integer)obj.get("id") == 1) {
-                    Global.states.put("Light 1", statecodeToState((Integer)obj.get("relay_one")));
-                    Global.states.put("Light 2", statecodeToState((Integer)obj.get("relay_two")));
-                    Log.d("Light 2: ",  Global.states.get("Light 2").toString());
+//                    Global.states.put("Light 1", statecodeToState((Integer)obj.get("relay_one")));
+//                    Global.states.put("Light 2", statecodeToState((Integer)obj.get("relay_two")));
+                    Global.updateStates("Light 1", statecodeToState((Integer)obj.get("relay_one")));
+                    Global.updateStates("Light 2", statecodeToState((Integer)obj.get("relay_two")));
                 } else if ((Integer)obj.get("id") == 2) {
-                    Global.states.put("Light 3", statecodeToState((Integer)obj.get("relay_one")));
-                    Global.states.put("Light 4", statecodeToState((Integer)obj.get("relay_two")));
+//                    Global.states.put("Light 3", statecodeToState((Integer)obj.get("relay_one")));
+//                    Global.states.put("Light 4", statecodeToState((Integer)obj.get("relay_two")));
+                    Global.updateStates("Light 3", statecodeToState((Integer)obj.get("relay_one")));
+                    Global.updateStates("Light 4", statecodeToState((Integer)obj.get("relay_two")));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

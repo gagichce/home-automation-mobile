@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,47 +15,49 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class RoomActivity extends AppCompatActivity {
+public class RoomActivity extends BaseActivity {
 
-    private Toolbar toolbar;
     private ListView listView;
     private String[] applianceStr = {"Light 1", "Light 2", "Light 3", "Light 4"};
-    private ApplianceItem[] appliances;
-    private ArrayAdapter<String> arrayAdapter;
     private ApplianceItemAdapter applianceItemAdapter;
     private String room_name;
+    public ApplianceItem[] appliances;
+
+    @Override
+    protected String getToolBarTitle() {
+        room_name = getIntent().getStringExtra("room_name");
+        return room_name;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_room;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
 
-        String[] rooms = new String []{
-                "Light 1", "Light 2",
-                "Light 3", "Light 4"
+        String[] room_appliances = new String []{
+                "Light 1",
+                "Light 2",
+                "Light 3",
+                "Light 4"
         };
 
         appliances = new ApplianceItem[4];
 
-        for (int i = 0; i < rooms.length; i++) {
-            String state = Global.states.get(rooms[i]).toString().toLowerCase();
-            appliances[i] = new ApplianceItem(rooms[i], state);
+        for (int i = 0; i < room_appliances.length; i++) {
+            String state = Global.states.get(room_appliances[i]).toString().toLowerCase();
+            appliances[i] = new ApplianceItem(room_appliances[i], state);
         }
 
-        room_name = getIntent().getStringExtra("room_name");
 
-        toolbar = (Toolbar)findViewById(R.id.toolbar_room);
-        toolbar.setTitle(room_name);
-
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         listView = (ListView)findViewById(R.id.sampleroom_listview);
 
-//        arrayAdapter = new ArrayAdapter<>(this, R.layout.layout_single_textview, applianceStr);
         applianceItemAdapter = new ApplianceItemAdapter(this, R.layout.layout_single_textview, appliances);
         listView.setAdapter(applianceItemAdapter);
 
@@ -80,6 +83,7 @@ public class RoomActivity extends AppCompatActivity {
                         lightIntent.putExtra("room_name", room_name);
                         lightIntent.putExtra("light_num", appliance_name);
                         lightIntent.putExtra("light_state", appliance_state);
+                        Toast.makeText(getApplicationContext(), "the current state is: " + appliance_state, Toast.LENGTH_SHORT).show();
                         startActivity(lightIntent);
                         break;
 
@@ -88,6 +92,21 @@ public class RoomActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        for (int i = 0; i < appliances.length; i++) {
+            String newState = Global.stateToString(Global.states.get(appliances[i].getApplianceName()));
+            Log.d("state:" , newState);
+            appliances[i].setApplianceState(newState);
+        }
+
+        applianceItemAdapter.notifyDataSetChanged();
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

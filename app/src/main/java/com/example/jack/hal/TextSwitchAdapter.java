@@ -2,6 +2,7 @@ package com.example.jack.hal;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Map;
 
 
 /**
@@ -20,7 +24,6 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
     private Context context;
     private int layoutResourceId;
     private TextSwitch[] data;
-    private Global global = new Global();
     private String light_num;
 
 
@@ -41,6 +44,7 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
 
         TextSwitch textSwitch = getItem(position);
 
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.light_listview_content, parent, false);
         }
@@ -49,16 +53,30 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
         Switch aSwitch = (Switch)convertView.findViewById(R.id.light_switch);
 
         label.setText(textSwitch.getLabel());
-
         aSwitch.setChecked(textSwitch.getisChecked());
+
 
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // note isChecked here represents the new check state
                 if (isChecked) {
-                    new HttpAsynTask().execute("off", light_num);
-                } else {
                     new HttpAsynTask().execute("on", light_num);
+//                    Global.states.put("Light " + light_num, Global.APPLIANCE_STATE.ON);
+                    Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.ON);
+//                    String newState = "";
+//                    for (Map.Entry<String, Global.APPLIANCE_STATE> entry : Global.states.entrySet()) {
+//                        newState = newState + entry.getKey() + " : " + entry.getValue().toString().toLowerCase() + ", \n";
+//                    }
+//                    Log.d("new State: ", newState);
+                } else {
+                    new HttpAsynTask().execute("off", light_num);
+                    Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.OFF);
+//                    String newState = "";
+//                    for (Map.Entry<String, Global.APPLIANCE_STATE> entry : Global.states.entrySet()) {
+//                        newState = newState + entry.getKey() + " : " + entry.getValue().toString().toLowerCase() + ", \n";
+//                    }
+//                    Log.d("new State: ", newState);
                 }
         }});
 

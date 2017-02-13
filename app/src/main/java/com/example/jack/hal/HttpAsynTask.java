@@ -43,16 +43,13 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
                 String data = EntityUtils.toString(entity);
 
 
-                JSONObject jsono = new JSONObject(data);
+//                JSONObject jsono = new JSONObject(data);
 
                 return true;
             }
 
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-
             e.printStackTrace();
         }
         return false;

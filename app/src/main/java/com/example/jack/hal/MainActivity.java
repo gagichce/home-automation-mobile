@@ -16,28 +16,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements TabRoomFragment.OnFragmentInteractionListener, TabSettingsFragment.OnFragmentInteractionListener{
+public class MainActivity extends BaseActivity implements TabRoomFragment.OnFragmentInteractionListener, TabSettingsFragment.OnFragmentInteractionListener{
 
-    private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+
+    @Override
+    protected String getToolBarTitle() {
+        return "HAL";
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        new StateChecker().execute();
 
 
 

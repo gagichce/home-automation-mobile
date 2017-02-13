@@ -18,6 +18,10 @@ public class TextSwitch {
         super();
     }
 
+    public void setChecked(Boolean checked) {
+        isChecked = checked;
+    }
+
     public TextSwitch(String label, int aSwitchId, Boolean isChecked) {
         super();
         this.label = label;
