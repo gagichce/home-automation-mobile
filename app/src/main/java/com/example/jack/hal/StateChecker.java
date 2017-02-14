@@ -67,7 +67,7 @@ public class StateChecker extends AsyncTask<String, Void, JSONArray> {
     protected JSONArray doInBackground(String... params) {
 
         try {
-            HttpGet httpPost = new HttpGet(Global.stateAPI);
+            HttpGet httpPost = new HttpGet(Global.STATE_API);
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httpPost);
