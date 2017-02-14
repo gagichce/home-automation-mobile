@@ -62,7 +62,6 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
                 // note isChecked here represents the new check state
                 if (isChecked) {
                     new HttpAsynTask().execute("on", light_num);
-//                    Global.states.put("Light " + light_num, Global.APPLIANCE_STATE.ON);
                     Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.ON);
 //                    String newState = "";
 //                    for (Map.Entry<String, Global.APPLIANCE_STATE> entry : Global.states.entrySet()) {

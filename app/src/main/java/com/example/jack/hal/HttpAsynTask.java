@@ -44,6 +44,7 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
 
 //                JSONObject jsono = new JSONObject(data);
+                Global.isServerUp = true;
 
                 return true;
             }
