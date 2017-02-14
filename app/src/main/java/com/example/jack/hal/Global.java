@@ -15,6 +15,7 @@ public final class Global {
     public static final HashMap<String, String> off_url = new HashMap<>();
     public static HashMap<String, APPLIANCE_STATE> states = new HashMap<>();
     public static boolean isServerUp = true;
+    public static final String stateAPI = "http://10.0.2.2:3000/api/current-state";
 
     public enum APPLIANCE_STATE {
         ON,

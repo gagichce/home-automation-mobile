@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 public class StateChecker extends AsyncTask<String, Void, JSONArray> {
 
-    private static final String stateAPI = "http://10.0.2.2:3000/api/current-state";
 
     private Global.APPLIANCE_STATE statecodeToState(int statecode) {
         if (statecode != 0 || statecode != 1) {
@@ -68,7 +67,7 @@ public class StateChecker extends AsyncTask<String, Void, JSONArray> {
     protected JSONArray doInBackground(String... params) {
 
         try {
-            HttpGet httpPost = new HttpGet(stateAPI);
+            HttpGet httpPost = new HttpGet(Global.stateAPI);
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response = httpclient.execute(httpPost);
