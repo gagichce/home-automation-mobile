@@ -34,15 +34,12 @@ public class LightActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_light);
 
         room_name = getIntent().getStringExtra("room_name");
         appliance_name = getIntent().getStringExtra("appliance_name");
         light_num = getIntent().getStringExtra("light_num");
         String light_state_str = getIntent().getStringExtra("light_state");
         light_state = light_state_str.equals("on") ? true : false;
-
-//        Toast.makeText(this, "Light_State is " + Boolean.toString(light_state), Toast.LENGTH_SHORT).show();
 
         textSwitches = new TextSwitch[] { new TextSwitch("On/Off", R.id.light_switch, light_state) };
 
@@ -55,6 +52,9 @@ public class LightActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         onBackPressed();
+
         return super.onOptionsItemSelected(item);
     }
+
+
 }

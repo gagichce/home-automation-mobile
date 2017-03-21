@@ -1,6 +1,8 @@
 package com.example.jack.hal;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,9 +21,12 @@ import java.io.IOException;
 
 public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
+
     @Override
     protected Boolean doInBackground(String... params) {
         try {
+
+            System.out.print("asdfsfs");
 
             HttpGet httppost;
             String light_num = params[1];

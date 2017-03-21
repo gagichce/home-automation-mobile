@@ -22,4 +22,6 @@
         <activity android:name=".BaseActivity"></activity>
     </application>
 
+    <service android:name=".UpdateService" />
+
 </manifest>

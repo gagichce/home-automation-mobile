@@ -2,6 +2,7 @@ package com.example.jack.hal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -72,8 +73,6 @@ public class RoomActivity extends BaseActivity {
                     case 3:
                     default:
 
-
-
                         ApplianceItem item = (ApplianceItem)parent.getItemAtPosition(position);
                         String appliance_name = item.getApplianceName();
                         String appliance_state = item.getApplianceState();
@@ -83,13 +82,20 @@ public class RoomActivity extends BaseActivity {
                         lightIntent.putExtra("room_name", room_name);
                         lightIntent.putExtra("light_num", appliance_name);
                         lightIntent.putExtra("light_state", appliance_state);
-//                        Toast.makeText(getApplicationContext(), "the current state is: " + appliance_state, Toast.LENGTH_SHORT).show();
                         startActivity(lightIntent);
                         break;
-
                 }
             }
         });
+
+    }
+
+    protected void updateAppliancesState() {
+        for (int i = 0; i < appliances.length; i++) {
+            String newState = Global.stateToString(Global.states.get(appliances[i].getApplianceName()));
+            Log.d("state:" , newState);
+            appliances[i].setApplianceState(newState);
+        }
 
     }
 
@@ -97,16 +103,11 @@ public class RoomActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        for (int i = 0; i < appliances.length; i++) {
-            String newState = Global.stateToString(Global.states.get(appliances[i].getApplianceName()));
-            Log.d("state:" , newState);
-            appliances[i].setApplianceState(newState);
+        if (Global.stateChecker.getStatus() == AsyncTask.Status.FINISHED) {
+            updateAppliancesState();
+            applianceItemAdapter.notifyDataSetChanged();
         }
-
-        applianceItemAdapter.notifyDataSetChanged();
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

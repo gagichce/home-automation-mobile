@@ -20,6 +20,7 @@ public class MainActivity extends BaseActivity implements TabRoomFragment.OnFrag
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private Global global;
 
 
     @Override
@@ -35,18 +36,13 @@ public class MainActivity extends BaseActivity implements TabRoomFragment.OnFrag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-
-
-
+        global = new Global();
     }
 
     private void setupViewPager(ViewPager viewPager) {
