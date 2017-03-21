@@ -63,19 +63,9 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
                 if (isChecked) {
                     new HttpAsynTask().execute("on", light_num);
                     Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.ON);
-//                    String newState = "";
-//                    for (Map.Entry<String, Global.APPLIANCE_STATE> entry : Global.states.entrySet()) {
-//                        newState = newState + entry.getKey() + " : " + entry.getValue().toString().toLowerCase() + ", \n";
-//                    }
-//                    Log.d("new State: ", newState);
                 } else {
                     new HttpAsynTask().execute("off", light_num);
                     Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.OFF);
-//                    String newState = "";
-//                    for (Map.Entry<String, Global.APPLIANCE_STATE> entry : Global.states.entrySet()) {
-//                        newState = newState + entry.getKey() + " : " + entry.getValue().toString().toLowerCase() + ", \n";
-//                    }
-//                    Log.d("new State: ", newState);
                 }
         }});
 
