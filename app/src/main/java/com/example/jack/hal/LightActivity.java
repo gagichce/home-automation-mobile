@@ -66,42 +66,23 @@ public class LightActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(SocketService.SOCKET_MESSAGE);
-                int[] updates = parseResult(s);
                 Log.d("adaptor message: ", s);
                 TextSwitch textSwitch = (TextSwitch) listView_switch.getItemAtPosition(0);
                 Button button = (Button) findViewById(textSwitch.getaSwitchId());
-
-                if (updates != null) {
-                    int position = idToPosition(updates[0]);
-                    Status status = stateToStatus(updates[1]);
-                }
 
             }
         };
     }
 
-    private int idToPosition(int id) {
-        switch (id) {
-            case 16:
-                return 0;
-            case 17:
-                return 1;
-            case 32:
-                return 2;
-        }
-    }
-
-    private int[] parseResult(String msg) {
+    private void parseResult(String msg) {
         try {
 
             JSONObject obj = new JSONObject(msg);
             int id = (Integer)obj.get("id");
             int state = (Integer)obj.get("state");
-            return new int[] {id, state};
         } catch (JSONException e) {
 
         }
-        return null;
     }
 
     @Override

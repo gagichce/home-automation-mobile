@@ -24,13 +24,13 @@ import io.socket.emitter.Emitter;
 
 public class Global extends Application {
 
-    public static final HashMap<String, String> on_url = new HashMap<>();
-    public static final HashMap<String, String> off_url = new HashMap<>();
+    public static final HashMap<String, String> url = new HashMap<>();
     public static HashMap<String, APPLIANCE_STATE> states = new HashMap<>();
     public static boolean isServerUp = true;
     public static final String IP = "192.168.254.2";
     public static final String URL = "http://" + IP;
     public static final String EMULATOR_LOCALHOST = "10.0.2.2";
+    public static final String PORT = "3030";
 //    public static final String EMULATOR_LOCALHOST = "localhost";
     public static final String STATE_API = "http://" + EMULATOR_LOCALHOST + ":3000/api/current-state";
     public static StateChecker stateChecker;
@@ -59,15 +59,11 @@ public class Global extends Application {
 //        off_url.put("4", "http://" + IP + ":3000/api/2/2/0");
 
 
-        on_url.put("1", "http://" + EMULATOR_LOCALHOST + ":3000/api/1/1/1");
-        on_url.put("2", "http://" + EMULATOR_LOCALHOST + ":3000/api/1/2/1");
-        on_url.put("3", "http://" + EMULATOR_LOCALHOST + ":3000/api/2/1/1");
-        on_url.put("4", "http://" + EMULATOR_LOCALHOST + ":3000/api/2/2/1");
+        url.put("0", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/16");
+        url.put("1", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/17");
+        url.put("2", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/32");
+        url.put("3", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/33");
 
-        off_url.put("1", "http://" + EMULATOR_LOCALHOST + ":3000/api/1/1/0");
-        off_url.put("2", "http://" + EMULATOR_LOCALHOST + ":3000/api/1/2/0");
-        off_url.put("3", "http://" + EMULATOR_LOCALHOST + ":3000/api/2/1/0");
-        off_url.put("4", "http://" + EMULATOR_LOCALHOST + ":3000/api/2/2/0");
 
         states.put("Light 1", APPLIANCE_STATE.OFF);
         states.put("Light 2", APPLIANCE_STATE.OFF);

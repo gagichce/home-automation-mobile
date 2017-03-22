@@ -34,49 +34,27 @@ import java.io.IOException;
 
 public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
-    private View v;
-    private TextSwitch textSwitch;
-    private com.example.jack.hal.descriptors.Status status;
-
-    public HttpAsynTask(View v, TextSwitch textSwitch, com.example.jack.hal.descriptors.Status status) {
-        this.v = v;
-        this.textSwitch = textSwitch;
-        this.status = status;
-    }
 
     @Override
     protected void onPostExecute(Boolean success) {
-        Button button = (Button)this.v.findViewById(R.id.light_button);
-
-        if (success) {
-            if (status == com.example.jack.hal.descriptors.Status.ON) {
-                button.setBackgroundColor(Color.GRAY);
-                textSwitch.setStatus(com.example.jack.hal.descriptors.Status.OFF);
-            } else {
-                button.setBackgroundColor(Color.GREEN);
-                textSwitch.setStatus(com.example.jack.hal.descriptors.Status.ON);
-            }
-        } else {
-            button.setBackgroundColor(Color.RED);
-            textSwitch.setStatus(status);
-        }
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
         try {
 
-            System.out.print("asdfsfs");
+            String light_num = params[1];
+            Log.d("Light number", light_num);
+            String uri = Global.url.get(light_num);
 
             HttpClientStack.HttpPatch httpPatch;
-            httpPatch = new HttpClientStack.HttpPatch("http://10.0.2.2:3030/devices/32");
+            httpPatch = new HttpClientStack.HttpPatch(uri);
 
 
 
-            String light_num = params[1];
 
             if (params[0] == "on") {
-                String patchString = "{\"state\" : 2 }";
+                String patchString = "{\"state\" : 1 }";
                 StringEntity entity = new StringEntity(patchString, "UTF-8");
                 entity.setContentType("application/json");
                 httpPatch.setEntity(entity);
@@ -100,7 +78,6 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
                 Log.d("response data", data);
 
-//                JSONObject jsono = new JSONObject(data);
                 Global.isServerUp = true;
 
                 return true;

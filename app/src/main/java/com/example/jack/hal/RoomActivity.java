@@ -1,9 +1,13 @@
 package com.example.jack.hal;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.jack.hal.descriptors.Status;
+import com.example.jack.hal.services.SocketService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RoomActivity extends BaseActivity {
 
@@ -25,6 +36,7 @@ public class RoomActivity extends BaseActivity {
     private ApplianceItemAdapter applianceItemAdapter;
     private String room_name;
     public ApplianceItem[] appliances;
+    private BroadcastReceiver receiver;
 
     @Override
     protected String getToolBarTitle() {
@@ -52,7 +64,7 @@ public class RoomActivity extends BaseActivity {
 
         for (int i = 0; i < room_appliances.length; i++) {
             String state = Global.states.get(room_appliances[i]).toString().toLowerCase();
-            appliances[i] = new ApplianceItem(room_appliances[i], state);
+            appliances[i] = new ApplianceItem(room_appliances[i], R.id.room_button, Status.OFF);
         }
 
 
@@ -73,40 +85,119 @@ public class RoomActivity extends BaseActivity {
                     case 3:
                     default:
 
-                        ApplianceItem item = (ApplianceItem)parent.getItemAtPosition(position);
-                        String appliance_name = item.getApplianceName();
-                        String appliance_state = item.getApplianceState();
-
-                        Intent lightIntent = new Intent(getApplicationContext(), LightActivity.class);
-                        lightIntent.putExtra("appliance_name", appliance_name);
-                        lightIntent.putExtra("room_name", room_name);
-                        lightIntent.putExtra("light_num", appliance_name);
-                        lightIntent.putExtra("light_state", appliance_state);
-                        startActivity(lightIntent);
                         break;
                 }
             }
         });
 
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s = intent.getStringExtra(SocketService.SOCKET_MESSAGE);
+                Log.d("Receiver", s);
+                int[] updates = parseResult(s);
+                int position = idToPosition(updates[0]);
+                View v = getViewByPosition(position, listView);
+
+                ApplianceItem item = (ApplianceItem) listView.getItemAtPosition(position);
+                Button button = (Button) v.findViewById(item.getButtonId());
+
+                if (updates != null) {
+                    Status status = stateToStatus(updates[1]);
+                    item.setStatus(status);
+                    switch (status) {
+                        case OFF:
+                            button.setBackgroundColor(Color.GRAY);
+                            break;
+                        case ON:
+                            button.setBackgroundColor(Color.GREEN);
+                            break;
+                        case ERROR:
+                            button.setBackgroundColor(Color.RED);
+                            break;
+                        case PENDING:
+                            button.setBackgroundColor(Color.YELLOW);
+                            break;
+                    }
+                }
+
+            }
+        };
+
     }
 
-    protected void updateAppliancesState() {
-        for (int i = 0; i < appliances.length; i++) {
-            String newState = Global.stateToString(Global.states.get(appliances[i].getApplianceName()));
-            Log.d("state:" , newState);
-            appliances[i].setApplianceState(newState);
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
+
+    private Status stateToStatus(int state) {
+        switch (state) {
+            case 0:
+                return Status.OFF;
+            case 1:
+                return Status.ON;
+            case 2:
+                return Status.PENDING;
+            case 3:
+                return Status.ERROR;
         }
 
+        return null;
+    }
+
+    private int idToPosition(int id) {
+        switch (id) {
+            case 16:
+                return 0;
+            case 17:
+                return 1;
+            case 32:
+                return 2;
+            case 33:
+                return 3;
+        }
+        return -1;
+    }
+
+    private int[] parseResult(String msg) {
+        try {
+
+            JSONObject obj = new JSONObject(msg);
+            int id = (Integer)obj.get("id");
+            int state = (Integer)obj.get("state");
+            return new int[] {id, state};
+        } catch (JSONException e) {
+
+        }
+        return null;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+                new IntentFilter(SocketService.SOCKET_RESULT)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (Global.stateChecker.getStatus() == AsyncTask.Status.FINISHED) {
-            updateAppliancesState();
-            applianceItemAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -118,25 +209,39 @@ public class RoomActivity extends BaseActivity {
 
     private class ApplianceItem {
         private String applianceName;
+        private int buttonId;
+        private Status status;
 
-        public void setApplianceState(String applianceState) {
-            this.applianceState = applianceState;
+        public ApplianceItem(String applianceName, int buttonId, Status status) {
+            this.applianceName = applianceName;
+            this.buttonId = buttonId;
+            this.status = status;
         }
 
-        private String applianceState;
-
-        public ApplianceItem(String applianceName, String applianceState) {
+        public void setApplianceName(String applianceName) {
             this.applianceName = applianceName;
-            this.applianceState = applianceState;
+        }
+
+        public void setButtonId(int buttonId) {
+            this.buttonId = buttonId;
+        }
+
+        public void setStatus(Status status) {
+            this.status = status;
+        }
+
+        public int getButtonId() {
+            return buttonId;
+        }
+
+        public Status getStatus() {
+            return status;
         }
 
         public String getApplianceName() {
             return applianceName;
         }
 
-        public String getApplianceState() {
-            return applianceState;
-        }
     }
 
     private class ApplianceItemAdapter extends ArrayAdapter<ApplianceItem> {
@@ -154,19 +259,59 @@ public class RoomActivity extends BaseActivity {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.room_listview_content, parent, false);
             }
 
-            ApplianceItem item = getItem(position);
+            final ApplianceItem item = getItem(position);
 
             TextView applianceName = (TextView)convertView.findViewById(R.id.room_appliance_name);
-            TextView applianceState = (TextView)convertView.findViewById(R.id.room_appliance_state);
+            final Button button = (Button)convertView.findViewById(R.id.room_button);
 
             applianceName.setText(item.getApplianceName());
-            applianceState.setText(item.getApplianceState());
+
+            switch (item.getStatus()) {
+                case OFF:
+                    button.setBackgroundColor(Color.GRAY);
+                    break;
+                case ON:
+                    button.setBackgroundColor(Color.GREEN);
+                    break;
+                case ERROR:
+                    button.setBackgroundColor(Color.RED);
+                    break;
+                case PENDING:
+                    button.setBackgroundColor(Color.YELLOW);
+                    break;
+            }
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Status current_status = item.getStatus();
+                    String pos_str = Integer.toString(position);
+                    switch (current_status) {
+                        case OFF:
+                            new HttpAsynTask().execute("on", pos_str);
+                            item.setStatus(Status.PENDING);
+                            button.setBackgroundColor(Color.YELLOW);
+                            break;
+                        case ON:
+                            new HttpAsynTask().execute("off", pos_str);
+                            item.setStatus(Status.PENDING);
+                            button.setBackgroundColor(Color.GREEN);
+                            break;
+                        case ERROR:
+                            break;
+                        case PENDING:
+                            break;
+                    }
+                }
+            });
+
+
 
             return convertView;
         }

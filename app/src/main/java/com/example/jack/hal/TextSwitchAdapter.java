@@ -64,28 +64,28 @@ public class TextSwitchAdapter extends ArrayAdapter<TextSwitch> {
         aSwitch.setBackgroundColor(Color.GRAY);
 
 
-        aSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Status current_status = textSwitch.getStatus();
-                switch (current_status) {
-                    case OFF:
-                        new HttpAsynTask(v, textSwitch, current_status).execute("on", light_num);
-                        aSwitch.setBackgroundColor(Color.YELLOW);
-                        textSwitch.setStatus(Status.PENDING);
-
-
-//                        Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.ON);
-                        break;
-                    case ON:
-                        new HttpAsynTask(v, textSwitch, current_status).execute("off", light_num);
-                        aSwitch.setBackgroundColor(Color.GRAY);
-                        textSwitch.setStatus(Status.PENDING);
-//                        Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.OFF);
-                        break;
-                }
-            }
-        });
+//        aSwitch.setOnClicVkListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Status current_status = textSwitch.getStatus();
+//                switch (current_status) {
+//                    case OFF:
+//                        new HttpAsynTask(v, textSwitch, current_status).execute("on", light_num);
+//                        aSwitch.setBackgroundColor(Color.YELLOW);
+//                        textSwitch.setStatus(Status.PENDING);
+//
+//
+////                        Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.ON);
+//                        break;
+//                    case ON:
+//                        new HttpAsynTask(v, textSwitch, current_status).execute("off", light_num);
+//                        aSwitch.setBackgroundColor(Color.GRAY);
+//                        textSwitch.setStatus(Status.PENDING);
+////                        Global.updateStates("Light " + light_num, Global.APPLIANCE_STATE.OFF);
+//                        break;
+//                }
+//            }
+//        });
 
 
         return convertView;
