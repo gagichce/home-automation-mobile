@@ -76,34 +76,7 @@ public class Global extends Application {
 
 
 
-        try {
-            Log.d("socket", "connecting");
-            mSocket = IO.socket("http://10.0.2.2:3030");
-            mSocket.on("devices updated", this.onStateChange).
-                    on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
-                @Override
-                public void call(Object... args) {
-                    Log.d("socket", "Socket connection is successful");
-                }
-
-            })
-                    .on(Socket.EVENT_ERROR, new Emitter.Listener() {
-
-                        @Override
-                        public void call(Object... args) {
-                            Log.d("socket", "error");
-                        }
-
-                    });
-
-
-
-            mSocket.connect();
-        } catch (URISyntaxException e) {
-            Log.d("socket", "crash");
-            throw new RuntimeException(e);
-        }
     }
 
     static {
@@ -132,14 +105,5 @@ public class Global extends Application {
     }
 
 
-    private Emitter.Listener onStateChange = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
 
-            Log.d("socket io", "an event has been triggered ----------------------------------");
-            JSONObject data = (JSONObject)args[0];
-            Log.d("scoket io", data.toString());
-
-        }
-    };
 }

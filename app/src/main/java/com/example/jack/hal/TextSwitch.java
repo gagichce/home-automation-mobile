@@ -3,12 +3,19 @@ package com.example.jack.hal;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.jack.hal.descriptors.Status;
+
 /**
  * Created by Jack on 2017-02-05.
  */
 
 public class TextSwitch {
 
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
 
     private String label;
     private int aSwitchId;
@@ -22,11 +29,17 @@ public class TextSwitch {
         isChecked = checked;
     }
 
-    public TextSwitch(String label, int aSwitchId, Boolean isChecked) {
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public TextSwitch(String label, int aSwitchId, Boolean isChecked, Status status) {
         super();
         this.label = label;
         this.aSwitchId = aSwitchId;
         this.isChecked = isChecked;
+        this.status = status;
+
 
     }
 
