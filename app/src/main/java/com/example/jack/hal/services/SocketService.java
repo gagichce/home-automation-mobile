@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.example.jack.hal.Global;
+import com.example.jack.hal.descriptors.Status;
+
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -87,7 +90,17 @@ public class SocketService extends Service {
             Log.d("socket io", "an event has been triggered ----------------------------------");
             JSONObject data = (JSONObject)args[0];
             Log.d("scoket io", data.toString());
+
             sendResult(data.toString());
+
+            int[] updates = Global.parseResult(data.toString());
+
+            if (updates != null) {
+
+                int light_num = Global.idToPosition(updates[0]);
+                Status status = Global.stateToStatus(updates[1]);
+                Global.updateStates("light " + Integer.toString(light_num + 1), status);
+            }
 
         }
     };

@@ -63,8 +63,8 @@ public class RoomActivity extends BaseActivity {
         appliances = new ApplianceItem[4];
 
         for (int i = 0; i < room_appliances.length; i++) {
-            String state = Global.states.get(room_appliances[i]).toString().toLowerCase();
-            appliances[i] = new ApplianceItem(room_appliances[i], R.id.room_button, Status.OFF);
+            Status status = Global.states.get(room_appliances[i].toString().toLowerCase());
+            appliances[i] = new ApplianceItem(room_appliances[i], R.id.room_button, status);
         }
 
 
@@ -95,15 +95,15 @@ public class RoomActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(SocketService.SOCKET_MESSAGE);
                 Log.d("Receiver", s);
-                int[] updates = parseResult(s);
-                int position = idToPosition(updates[0]);
+                int[] updates = Global.parseResult(s);
+                int position = Global.idToPosition(updates[0]);
                 View v = getViewByPosition(position, listView);
 
                 ApplianceItem item = (ApplianceItem) listView.getItemAtPosition(position);
                 Button button = (Button) v.findViewById(item.getButtonId());
 
                 if (updates != null) {
-                    Status status = stateToStatus(updates[1]);
+                    Status status = Global.stateToStatus(updates[1]);
                     item.setStatus(status);
                     switch (status) {
                         case OFF:
@@ -138,47 +138,6 @@ public class RoomActivity extends BaseActivity {
         }
     }
 
-    private Status stateToStatus(int state) {
-        switch (state) {
-            case 0:
-                return Status.OFF;
-            case 1:
-                return Status.ON;
-            case 2:
-                return Status.PENDING;
-            case 3:
-                return Status.ERROR;
-        }
-
-        return null;
-    }
-
-    private int idToPosition(int id) {
-        switch (id) {
-            case 16:
-                return 0;
-            case 17:
-                return 1;
-            case 32:
-                return 2;
-            case 33:
-                return 3;
-        }
-        return -1;
-    }
-
-    private int[] parseResult(String msg) {
-        try {
-
-            JSONObject obj = new JSONObject(msg);
-            int id = (Integer)obj.get("id");
-            int state = (Integer)obj.get("state");
-            return new int[] {id, state};
-        } catch (JSONException e) {
-
-        }
-        return null;
-    }
 
     @Override
     protected void onStart() {
@@ -274,7 +233,7 @@ public class RoomActivity extends BaseActivity {
 
             switch (item.getStatus()) {
                 case OFF:
-                    button.setBackgroundColor(Color.GRAY);
+//                    button.setBackgroundColor(Color.GRAY);
                     break;
                 case ON:
                     button.setBackgroundColor(Color.GREEN);
@@ -310,8 +269,6 @@ public class RoomActivity extends BaseActivity {
                     }
                 }
             });
-
-
 
             return convertView;
         }

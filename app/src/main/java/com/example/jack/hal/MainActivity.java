@@ -46,6 +46,7 @@ public class MainActivity extends BaseActivity implements TabRoomFragment.OnFrag
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         global = new Global();
+        new HttpAsynTask().execute("get-states");
 
         startService(new Intent(MainActivity.this, SocketService.class));
     }

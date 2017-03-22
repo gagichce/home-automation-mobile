@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import com.android.volley.toolbox.HttpClientStack;
 import com.example.jack.hal.descriptors.Status;
-import com.example.jack.hal.interfaces.AsyncResponse;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,53 +36,67 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
+
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
         try {
 
-            String light_num = params[1];
-            Log.d("Light number", light_num);
-            String uri = Global.url.get(light_num);
-
+            HttpGet httpGet;
             HttpClientStack.HttpPatch httpPatch;
-            httpPatch = new HttpClientStack.HttpPatch(uri);
-
-
-
-
-            if (params[0] == "on") {
-                String patchString = "{\"state\" : 1 }";
-                StringEntity entity = new StringEntity(patchString, "UTF-8");
-                entity.setContentType("application/json");
-                httpPatch.setEntity(entity);
-            } else {
-                String patchString = "{\"state\" : 0 }";
-                StringEntity entity = new StringEntity(patchString, "UTF-8");
-                entity.setContentType("application/json");
-                httpPatch.setEntity(entity);
-            }
-
+            HttpResponse response;
             HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = httpclient.execute(httpPatch);
 
-            // StatusLine stat = response.getStatusLine();
-            int status = response.getStatusLine().getStatusCode();
-            Log.d("http call status", Integer.toString(status));
+            if (params.length == 1 && params[0].equals("get-states")) {
+                httpGet = new HttpGet(Global.url.get("states"));
+                response = httpclient.execute(httpGet);
 
-            if (status == 200) {
-                HttpEntity entity = response.getEntity();
-                String data = EntityUtils.toString(entity);
+                int status = response.getStatusLine().getStatusCode();
+                if (status == 200) {
+                    Log.d("Httpget call", "success");
+                    HttpEntity entity = response.getEntity();
+                    String data = EntityUtils.toString(entity);
+                    Log.d("GET response data", data);
+                }
 
-                Log.d("response data", data);
+            } else {
 
-                Global.isServerUp = true;
 
-                return true;
+                String light_num = params[1];
+                Log.d("Light number", light_num);
+                String uri = Global.url.get(light_num);
+
+
+                httpPatch = new HttpClientStack.HttpPatch(uri);
+
+
+                if (params[0] == "on") {
+                    String patchString = "{\"state\" : 1 }";
+                    StringEntity entity = new StringEntity(patchString, "UTF-8");
+                    entity.setContentType("application/json");
+                    httpPatch.setEntity(entity);
+                } else {
+                    String patchString = "{\"state\" : 0 }";
+                    StringEntity entity = new StringEntity(patchString, "UTF-8");
+                    entity.setContentType("application/json");
+                    httpPatch.setEntity(entity);
+                }
+
+                response = httpclient.execute(httpPatch);
+
+                int status = response.getStatusLine().getStatusCode();
+                Log.d("http call status", Integer.toString(status));
+
+                if (status == 200) {
+                    HttpEntity entity = response.getEntity();
+                    String data = EntityUtils.toString(entity);
+
+                    Log.d("response data", data);
+
+                    return true;
+                }
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -25,13 +25,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (Global.isServerUp) {
-//            new StateChecker().execute();
-            Global.stateChecker = new StateChecker();
-            Global.stateChecker.execute();
-        } else {
-            Toast.makeText(getApplicationContext(), "Can't connect to server.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void configureToolbar() {

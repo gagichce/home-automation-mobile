@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jack.hal.descriptors.Status;
-import com.example.jack.hal.interfaces.AsyncResponse;
 import com.example.jack.hal.services.SocketService;
 
 import java.util.Map;
