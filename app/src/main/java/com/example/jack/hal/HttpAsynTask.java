@@ -72,7 +72,7 @@ public class HttpAsynTask extends AsyncTask<String, Void, Boolean> {
 
 
                 if (params[0] == "on") {
-                    String patchString = "{\"state\" : 1 }";
+                    String patchString = "{\"state\" : 2 }";
                     StringEntity entity = new StringEntity(patchString, "UTF-8");
                     entity.setContentType("application/json");
                     httpPatch.setEntity(entity);

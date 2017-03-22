@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,14 +102,14 @@ public class RoomActivity extends BaseActivity {
                 View v = getViewByPosition(position, listView);
 
                 ApplianceItem item = (ApplianceItem) listView.getItemAtPosition(position);
-                Button button = (Button) v.findViewById(item.getButtonId());
+                ImageButton button = (ImageButton) v.findViewById(item.getButtonId());
 
                 if (updates != null) {
                     Status status = Global.stateToStatus(updates[1]);
                     item.setStatus(status);
                     switch (status) {
                         case OFF:
-                            button.setBackgroundColor(Color.GRAY);
+                            button.setBackgroundColor(Color.TRANSPARENT);
                             break;
                         case ON:
                             button.setBackgroundColor(Color.GREEN);
@@ -227,13 +229,13 @@ public class RoomActivity extends BaseActivity {
             final ApplianceItem item = getItem(position);
 
             TextView applianceName = (TextView)convertView.findViewById(R.id.room_appliance_name);
-            final Button button = (Button)convertView.findViewById(R.id.room_button);
+            final ImageButton button = (ImageButton)convertView.findViewById(R.id.room_button);
 
             applianceName.setText(item.getApplianceName());
 
             switch (item.getStatus()) {
                 case OFF:
-//                    button.setBackgroundColor(Color.GRAY);
+                    button.setBackgroundColor(Color.TRANSPARENT);
                     break;
                 case ON:
                     button.setBackgroundColor(Color.GREEN);
