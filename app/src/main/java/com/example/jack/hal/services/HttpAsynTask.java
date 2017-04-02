@@ -60,7 +60,7 @@ public class HttpAsynTask extends AsyncTask<String, Void, Response> {
                     for (int i = 0; i < roomArray.length(); i++) {
                         JSONObject roomObj = roomArray.getJSONObject(i);
                         int id = (Integer) roomObj.get("id");
-                        Global.rooms.add(new RoomDescriptor(
+                        Global.rooms.put(id, new RoomDescriptor(
                                 id,
                                 (String) roomObj.get("name"),
                                 Global.getDevicesByRoomID(id)
@@ -83,8 +83,10 @@ public class HttpAsynTask extends AsyncTask<String, Void, Response> {
 
                     for (int i = 0; i < deviceArray.length(); i++) {
                         JSONObject deviceObj = deviceArray.getJSONObject(i);
-                        Global.devices.add(new DeviceDescriptor(
-                                (Integer) deviceObj.get("id"),
+                        int id = (Integer) deviceObj.get("id");
+
+                        Global.devices.put(id, new DeviceDescriptor(
+                                id,
                                 (String) deviceObj.get("name"),
                                 (Integer) deviceObj.get("roomId"),
                                 Global.stateToStatus((Integer)deviceObj.get("state"))

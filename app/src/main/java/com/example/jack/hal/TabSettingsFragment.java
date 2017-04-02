@@ -1,14 +1,18 @@
 package com.example.jack.hal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.jack.hal.pattern.PatternListActivity;
 
 
 /**
@@ -78,6 +82,21 @@ public class TabSettingsFragment extends Fragment {
         arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_single_textview, rooms);
         listView = (ListView) view.findViewById(R.id.tab_settings_listview);
         listView.setAdapter(arrayAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        Intent intent = new Intent(getActivity(), PatternListActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        });
 
         return view;
     }

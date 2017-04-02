@@ -62,8 +62,10 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
         List<Status> applianceStatus = new ArrayList<>();
         List<Integer> applianceIds = new ArrayList<>();
 
-        for (int i = 0; i < Global.devices.size(); i++) {
-            DeviceDescriptor device = Global.devices.get(i);
+        ArrayList<DeviceDescriptor> deviceDescriptors = new ArrayList<>(Global.devices.values());
+
+        for (int i = 0; i < deviceDescriptors.size(); i++) {
+            DeviceDescriptor device =deviceDescriptors.get(i);
             if (device.getRoomId() == roomId) {
                 applianceNames.add(device.getName());
                 applianceStatus.add(device.getStatus());

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.jack.hal.descriptors.DeviceDescriptor;
+import com.example.jack.hal.descriptors.PatternDescriptor;
 import com.example.jack.hal.descriptors.RoomDescriptor;
 import com.example.jack.hal.descriptors.Status;
 
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +45,9 @@ public class Global extends Application {
     public static final String STATE_API = "http://" + EMULATOR_LOCALHOST + ":3000/api/current-state";
 
 
-    public static List<RoomDescriptor> rooms;
-    public static List<DeviceDescriptor> devices;
+    public static Map<Integer, RoomDescriptor> rooms;
+    public static Map<Integer, DeviceDescriptor> devices;
+    public static Map<Integer, PatternDescriptor> patterns;
     public static Map<Integer, Integer> id2position = new HashMap<>();
 
 
@@ -58,6 +61,8 @@ public class Global extends Application {
     static {
         url.put("states", "http://" + EMULATOR_LOCALHOST + ":" + PORT + "/devices/");
         url.put("rooms", "http://" + EMULATOR_LOCALHOST + ":" + PORT + "/rooms/");
+        url.put("patterns", "http://" + EMULATOR_LOCALHOST + ":" + PORT + "/patterns/");
+
         url.put("16", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/16");
         url.put("17", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/17");
         url.put("32", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/32");
@@ -69,8 +74,9 @@ public class Global extends Application {
         states.put("32", OFF);
         states.put("33", OFF);
 
-        devices = new ArrayList<>();
-        rooms = new ArrayList<>();
+        devices = new LinkedHashMap<>();
+        rooms = new LinkedHashMap<>();
+        patterns = new LinkedHashMap<>();
 
 
     }
@@ -94,13 +100,20 @@ public class Global extends Application {
     public static void updateStates(String key, Status val) {
         Log.d("Updating state:", "key :" + key + ", " + val.toString().toLowerCase());
 
-        for (DeviceDescriptor device : devices) {
-            if (device.getId() == Integer.valueOf(key)) {
-                device.setStatus(val);
+        for (Map.Entry<Integer, DeviceDescriptor> entry : devices.entrySet()) {
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+            if (entry.getValue().getId() == Integer.valueOf(key)) {
+                entry.getValue().setStatus(val);
             }
         }
-
-//        states.put(key, val);
+//
+//        for (DeviceDescriptor device : devices) {
+//            if (device.getId() == Integer.valueOf(key)) {
+//                device.setStatus(val);
+//            }
+//        }
+//
+////        states.put(key, val);
     }
 
 
@@ -150,9 +163,11 @@ public class Global extends Application {
     public static List<DeviceDescriptor> getDevicesByRoomID(int roomId) {
         ArrayList<DeviceDescriptor> ret = new ArrayList<>();
 
-        for (DeviceDescriptor device : devices) {
-            if (device.getRoomId() == roomId) {
-                ret.add(device);
+
+        for (Map.Entry<Integer, DeviceDescriptor> entry : devices.entrySet()) {
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+            if (entry.getValue().getRoomId() == roomId) {
+                ret.add(entry.getValue());
             }
         }
 

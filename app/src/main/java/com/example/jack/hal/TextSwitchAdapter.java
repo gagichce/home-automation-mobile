@@ -1,25 +1,16 @@
 package com.example.jack.hal;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.jack.hal.descriptors.Status;
-import com.example.jack.hal.services.SocketService;
-
-import java.util.Map;
+import com.example.jack.hal.pattern.TextSwitch;
 
 
 /**

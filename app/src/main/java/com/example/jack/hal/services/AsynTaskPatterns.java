@@ -2,11 +2,12 @@ package com.example.jack.hal.services;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.HttpClientStack;
 import com.example.jack.hal.Global;
-import com.example.jack.hal.descriptors.DeviceDescriptor;
+import com.example.jack.hal.descriptors.PatternDescriptor;
+import com.example.jack.hal.descriptors.RoomDescriptor;
+import com.example.jack.hal.pattern.PatternState;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,33 +20,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by Jack on 2017-04-01.
+ * Created by Jack on 2017-04-02.
  */
 
-public class AsynTaskDevices extends AsyncTask<String, Void, String> {
-
+public class AsynTaskPatterns extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String data) {
-
         if (data == null) {
             return;
         }
 
         try {
             JSONObject wholeObj = new JSONObject(data);
-            JSONArray deviceArray = wholeObj.getJSONArray("data");
+            JSONArray patternArray = wholeObj.getJSONArray("data");
 
-            for (int i = 0; i < deviceArray.length(); i++) {
-                JSONObject deviceObj = deviceArray.getJSONObject(i);
-                int id = (Integer) deviceObj.get("id");
-                Global.devices.put(id, new DeviceDescriptor(
+            for (int i = 0; i < patternArray.length(); i++) {
+                JSONObject patternObj = patternArray.getJSONObject(i);
+                int id = (Integer) patternObj.get("id");
+                int deviceId = (Integer) patternObj.get("deviceId");
+                String description = (String) patternObj.get("pattern_text");
+                String patternRule = (String) patternObj.get("pattern_rule");
+
+                Global.patterns.put(id ,new PatternDescriptor(
                         id,
-                        (String) deviceObj.get("name"),
-                        (Integer) deviceObj.get("roomId"),
-                        Global.stateToStatus((Integer)deviceObj.get("state"))
+                        deviceId,
+                        description,
+                        patternRule,
+                        PatternState.int2State((Integer)patternObj.get("status"))
                 ));
             }
+
+
         } catch (JSONException e) {
 
         }
@@ -53,29 +59,30 @@ public class AsynTaskDevices extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        HttpGet httpGet;
-        HttpResponse response;
-        HttpClient httpclient = new DefaultHttpClient();
 
         try {
-            httpGet = new HttpGet(Global.url.get("states"));
+            HttpGet httpGet;
+            HttpClientStack.HttpPatch httpPatch;
+            HttpResponse response;
+            HttpClient httpclient = new DefaultHttpClient();
+
+            httpGet = new HttpGet(Global.url.get("patterns"));
             response = httpclient.execute(httpGet);
 
             int status = response.getStatusLine().getStatusCode();
             if (status == 200) {
-                Log.d("Httpget call", "success");
+                Log.d("Httpget call patterns", "success");
                 HttpEntity entity = response.getEntity();
                 String data = EntityUtils.toString(entity);
                 Log.d("GET response data", data);
-
                 return data;
+
             }
+
         } catch (Exception e) {
 
         }
 
         return null;
-
     }
 }
-

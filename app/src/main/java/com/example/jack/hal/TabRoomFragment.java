@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.jack.hal.descriptors.RoomDescriptor;
 import com.example.jack.hal.services.AsynDelegate;
 import com.example.jack.hal.services.AsynTaskRooms;
 import com.example.jack.hal.services.HttpAsynTask;
@@ -55,9 +56,12 @@ public class TabRoomFragment extends Fragment implements AsynDelegate {
     public void asyncComplete(boolean success) {
         rooms = new String[Global.rooms.size()];
         roomIds = new int[rooms.length];
+
+        ArrayList<RoomDescriptor> roomDescriptors = new ArrayList<>(Global.rooms.values());
+
         for (int i = 0; i < Global.rooms.size(); i++) {
-            rooms[i] = Global.rooms.get(i).getName();
-            roomIds[i] = Global.rooms.get(i).getId();
+            rooms[i] = roomDescriptors.get(i).getName();
+            roomIds[i] = roomDescriptors.get(i).getId();
         }
 
         arrayAdapter.clear();

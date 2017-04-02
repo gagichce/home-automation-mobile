@@ -43,7 +43,7 @@ public class AsynTaskRooms extends AsyncTask<String, Void, String> {
             for (int i = 0; i < roomArray.length(); i++) {
                 JSONObject roomObj = roomArray.getJSONObject(i);
                 int id = (Integer) roomObj.get("id");
-                Global.rooms.add(new RoomDescriptor(
+                Global.rooms.put(id, new RoomDescriptor(
                         id,
                         (String) roomObj.get("name"),
                         Global.getDevicesByRoomID(id)
