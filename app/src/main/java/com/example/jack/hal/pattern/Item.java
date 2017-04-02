@@ -5,6 +5,7 @@ package com.example.jack.hal.pattern;
  */
 
 public class Item {
+    private int patternId;
     private TextSwitch header;
     private String description;
     private int imageButtonId;
@@ -17,11 +18,20 @@ public class Item {
         this.header = header;
     }
 
-    public Item(TextSwitch header, String description,  int imageButtonId) {
+    public Item(int patternId, TextSwitch header, String description,  int imageButtonId) {
+        this.patternId = patternId;
         this.description = description;
         this.header = header;
 
         this.imageButtonId = imageButtonId;
+    }
+
+    public int getPatternId() {
+        return patternId;
+    }
+
+    public void setPatternId(int patternId) {
+        this.patternId = patternId;
     }
 
     public String getDescription() {

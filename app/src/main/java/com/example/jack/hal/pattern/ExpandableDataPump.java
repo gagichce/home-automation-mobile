@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class ExpandableDataPump {
 
-    public static Map<Integer, Item> getData () {
-        HashMap<Integer, Item> expandableListDetail = new
+    public static Map<Integer, List<Item>> getData () {
+        HashMap<Integer, List<Item>> expandableListDetail = new
                 HashMap<>();
 
 
@@ -32,12 +32,14 @@ public class ExpandableDataPump {
             String description = pattern.getDescription();
             PatternState state = pattern.getStatus();
 
-            TextSwitch textSwitch = new TextSwitch(roomName + " ," + deviceName, R.id.pattern_listview_switch, state);
-            Item item = new Item(textSwitch, description, R.id.pattern_listview_btn);
+            TextSwitch textSwitch = new TextSwitch(roomName + ", " + deviceName, R.id.pattern_listview_switch, state);
+            Item item = new Item(id, textSwitch, description, R.id.pattern_listview_btn);
 
-            expandableListDetail.put(id, item);
+            ArrayList<Item> items = new ArrayList<>();
+            items.add(item);
+
+            expandableListDetail.put(id, items);
         }
-
 
         return expandableListDetail;
     }

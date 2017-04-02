@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
 import com.example.jack.hal.services.AsynTaskDevices;
+import com.example.jack.hal.services.AsynTaskPatterns;
 import com.example.jack.hal.services.HttpAsynTask;
 import com.example.jack.hal.services.SocketService;
 
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity implements TabRoomFragment.OnFrag
         global = new Global();
 
         new AsynTaskDevices().execute();
+        new AsynTaskPatterns().execute();
 
 
         startService(new Intent(MainActivity.this, SocketService.class));
