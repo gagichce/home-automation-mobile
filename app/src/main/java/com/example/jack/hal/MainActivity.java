@@ -3,20 +3,21 @@ package com.example.jack.hal;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
+import com.example.jack.hal.services.AsynTaskDevices;
+import com.example.jack.hal.services.HttpAsynTask;
 import com.example.jack.hal.services.SocketService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends BaseActivity implements TabRoomFragment.OnFragmentInteractionListener, TabSettingsFragment.OnFragmentInteractionListener{
@@ -46,7 +47,9 @@ public class MainActivity extends BaseActivity implements TabRoomFragment.OnFrag
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         global = new Global();
-        new HttpAsynTask().execute("get-states");
+
+        new AsynTaskDevices().execute();
+
 
         startService(new Intent(MainActivity.this, SocketService.class));
     }

@@ -97,9 +97,9 @@ public class SocketService extends Service {
 
             if (updates != null) {
 
-                int light_num = Global.idToPosition(updates[0]);
+                int id = updates[0];
                 Status status = Global.stateToStatus(updates[1]);
-                Global.updateStates("light " + Integer.toString(light_num + 1), status);
+                Global.updateStates(Integer.toString(id), status);
             }
 
         }

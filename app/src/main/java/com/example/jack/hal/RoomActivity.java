@@ -1,17 +1,14 @@
 package com.example.jack.hal;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.Image;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,26 +16,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.jack.hal.descriptors.DeviceDescriptor;
 import com.example.jack.hal.descriptors.Status;
+import com.example.jack.hal.services.AsynDelegate;
+import com.example.jack.hal.services.HttpAsynTask;
 import com.example.jack.hal.services.SocketService;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class RoomActivity extends BaseActivity {
+public class RoomActivity extends BaseActivity implements AsynDelegate {
+
 
     private ListView listView;
-    private String[] applianceStr = {"Light 1", "Light 2", "Light 3", "Light 4"};
     private ApplianceItemAdapter applianceItemAdapter;
     private String room_name;
     public ApplianceItem[] appliances;
     private BroadcastReceiver receiver;
+
+
+    @Override
+    public void asyncComplete(boolean success) {
+        applianceItemAdapter.notifyDataSetChanged();
+    }
 
     @Override
     protected String getToolBarTitle() {
@@ -51,25 +56,38 @@ public class RoomActivity extends BaseActivity {
         return R.layout.activity_room;
     }
 
+
+    private void constructApplianceItem(int roomId) {
+        List<String> applianceNames = new ArrayList<>();
+        List<Status> applianceStatus = new ArrayList<>();
+        List<Integer> applianceIds = new ArrayList<>();
+
+        for (int i = 0; i < Global.devices.size(); i++) {
+            DeviceDescriptor device = Global.devices.get(i);
+            if (device.getRoomId() == roomId) {
+                applianceNames.add(device.getName());
+                applianceStatus.add(device.getStatus());
+                applianceIds.add(device.getId());
+            }
+        }
+
+        appliances = new ApplianceItem[applianceNames.size()];
+
+        for (int i = 0; i < applianceNames.size(); i++) {
+            int id = applianceIds.get(i);
+            String name = applianceNames.get(i);
+            appliances[i] = new ApplianceItem(name, R.id.room_button, applianceStatus.get(i), id);
+            Global.id2position.put(id, i);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String[] room_appliances = new String []{
-                "Light 1",
-                "Light 2",
-                "Light 3",
-                "Light 4"
-        };
+        int roomId = getIntent().getIntExtra("roomId", -1);
 
-        appliances = new ApplianceItem[4];
-
-        for (int i = 0; i < room_appliances.length; i++) {
-            Status status = Global.states.get(room_appliances[i].toString().toLowerCase());
-            appliances[i] = new ApplianceItem(room_appliances[i], R.id.room_button, status);
-        }
-
-
+        constructApplianceItem(roomId);
 
         listView = (ListView)findViewById(R.id.sampleroom_listview);
 
@@ -86,7 +104,9 @@ public class RoomActivity extends BaseActivity {
                     case 2:
                     case 3:
                     default:
-
+                        Log.d("Room listview", "Position " + Integer.toString(position) + " is pressed");
+                        Intent intent = new Intent(RoomActivity.this, LightActivity.class);
+                        startActivity(intent);
                         break;
                 }
             }
@@ -98,13 +118,27 @@ public class RoomActivity extends BaseActivity {
                 String s = intent.getStringExtra(SocketService.SOCKET_MESSAGE);
                 Log.d("Receiver", s);
                 int[] updates = Global.parseResult(s);
-                int position = Global.idToPosition(updates[0]);
-                View v = getViewByPosition(position, listView);
 
-                ApplianceItem item = (ApplianceItem) listView.getItemAtPosition(position);
-                ImageButton button = (ImageButton) v.findViewById(item.getButtonId());
+
 
                 if (updates != null) {
+
+                    Log.d("UPDATES", Arrays.toString(updates));
+
+                    int id = updates[0];
+
+                    Integer position = Global.id2position.get(id);
+
+                    if (position == null) {
+                        return;
+                    }
+
+
+                    View v = getViewByPosition(position, listView);
+
+                    ApplianceItem item = (ApplianceItem) listView.getItemAtPosition(position);
+                    ImageButton button = (ImageButton) v.findViewById(item.getButtonId());
+
                     Status status = Global.stateToStatus(updates[1]);
                     item.setStatus(status);
                     switch (status) {
@@ -158,6 +192,8 @@ public class RoomActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("ROOM ACTIVITY", "OnResume called");
+
 
     }
 
@@ -172,11 +208,21 @@ public class RoomActivity extends BaseActivity {
         private String applianceName;
         private int buttonId;
         private Status status;
+        private int id;
 
-        public ApplianceItem(String applianceName, int buttonId, Status status) {
+        public ApplianceItem(String applianceName, int buttonId, Status status, int id) {
             this.applianceName = applianceName;
             this.buttonId = buttonId;
             this.status = status;
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
         }
 
         public void setApplianceName(String applianceName) {
@@ -253,14 +299,15 @@ public class RoomActivity extends BaseActivity {
                 public void onClick(View v) {
                     Status current_status = item.getStatus();
                     String pos_str = Integer.toString(position);
+                    String id = Integer.toString(item.getId());
                     switch (current_status) {
                         case OFF:
-                            new HttpAsynTask().execute("on", pos_str);
+                            new HttpAsynTask().execute("on", id);
                             item.setStatus(Status.PENDING);
                             button.setBackgroundColor(Color.YELLOW);
                             break;
                         case ON:
-                            new HttpAsynTask().execute("off", pos_str);
+                            new HttpAsynTask().execute("off", id);
                             item.setStatus(Status.PENDING);
                             button.setBackgroundColor(Color.GREEN);
                             break;

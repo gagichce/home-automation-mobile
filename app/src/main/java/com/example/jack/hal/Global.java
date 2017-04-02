@@ -6,12 +6,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.jack.hal.descriptors.DeviceDescriptor;
+import com.example.jack.hal.descriptors.RoomDescriptor;
 import com.example.jack.hal.descriptors.Status;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,11 @@ public class Global extends Application {
     public static final String STATE_API = "http://" + EMULATOR_LOCALHOST + ":3000/api/current-state";
 
 
+    public static List<RoomDescriptor> rooms;
+    public static List<DeviceDescriptor> devices;
+    public static Map<Integer, Integer> id2position = new HashMap<>();
+
+
     public ActivityManager activityManager;
     public Context context;
 
@@ -47,23 +55,26 @@ public class Global extends Application {
     public static Socket mSocket;
 
 
-    public Global() {
-        url.put("states", "http://" + EMULATOR_LOCALHOST + ":" + PORT + "/devices/");
-        url.put("0", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/16");
-        url.put("1", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/17");
-        url.put("2", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/32");
-        url.put("3", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/33");
-
-
-        states.put("light 1", OFF);
-        states.put("light 2", OFF);
-        states.put("light 3", OFF);
-        states.put("light 4", OFF);
-    }
-
     static {
+        url.put("states", "http://" + EMULATOR_LOCALHOST + ":" + PORT + "/devices/");
+        url.put("rooms", "http://" + EMULATOR_LOCALHOST + ":" + PORT + "/rooms/");
+        url.put("16", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/16");
+        url.put("17", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/17");
+        url.put("32", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/32");
+        url.put("33", "http://" + EMULATOR_LOCALHOST + ":" +  PORT + "/devices/33");
+
+
+        states.put("16", OFF);
+        states.put("17", OFF);
+        states.put("32", OFF);
+        states.put("33", OFF);
+
+        devices = new ArrayList<>();
+        rooms = new ArrayList<>();
+
 
     }
+
 
     public static String stateToString(Status state) {
 
@@ -82,7 +93,14 @@ public class Global extends Application {
 
     public static void updateStates(String key, Status val) {
         Log.d("Updating state:", "key :" + key + ", " + val.toString().toLowerCase());
-        states.put(key, val);
+
+        for (DeviceDescriptor device : devices) {
+            if (device.getId() == Integer.valueOf(key)) {
+                device.setStatus(val);
+            }
+        }
+
+//        states.put(key, val);
     }
 
 
@@ -126,6 +144,19 @@ public class Global extends Application {
 
         }
         return null;
+    }
+
+
+    public static List<DeviceDescriptor> getDevicesByRoomID(int roomId) {
+        ArrayList<DeviceDescriptor> ret = new ArrayList<>();
+
+        for (DeviceDescriptor device : devices) {
+            if (device.getRoomId() == roomId) {
+                ret.add(device);
+            }
+        }
+
+        return ret;
     }
 
     public static Status[] parseStates(String msg) {

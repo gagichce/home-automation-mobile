@@ -1,9 +1,12 @@
 package com.example.jack.hal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.jack.hal.services.AsynDelegate;
+import com.example.jack.hal.services.AsynTaskRooms;
+import com.example.jack.hal.services.HttpAsynTask;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -21,7 +31,7 @@ import android.widget.ListView;
  * Use the {@link TabRoomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabRoomFragment extends Fragment {
+public class TabRoomFragment extends Fragment implements AsynDelegate {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,9 +45,27 @@ public class TabRoomFragment extends Fragment {
 
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
-    private String[] rooms = {"Living Room", "Main Bedroom", "Guest Bedroom 1", "Guest Bedroom 2",
-                              "Kitchen", "Bathroom"};
+    private String[] rooms;
+    private int[] roomIds;
+    private Handler handler;
+    private Activity activity;
 
+
+    @Override
+    public void asyncComplete(boolean success) {
+        rooms = new String[Global.rooms.size()];
+        roomIds = new int[rooms.length];
+        for (int i = 0; i < Global.rooms.size(); i++) {
+            rooms[i] = Global.rooms.get(i).getName();
+            roomIds[i] = Global.rooms.get(i).getId();
+        }
+
+        arrayAdapter.clear();
+        arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_single_textview, rooms);
+
+        this.arrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(this.arrayAdapter);
+    }
 
     public TabRoomFragment() {
         // Required empty public constructor
@@ -75,8 +103,17 @@ public class TabRoomFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+//        new HttpAsynTask(this).execute("get-states");
+
+        new AsynTaskRooms(this).execute();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_room, container, false);
+
+
+        rooms = new String[0];
+
 
         arrayAdapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.layout_single_textview, rooms);
         listView = (ListView) view.findViewById(R.id.tab_rooms_listview);
@@ -96,6 +133,7 @@ public class TabRoomFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.activity = getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -136,8 +174,8 @@ public class TabRoomFragment extends Fragment {
 
 
 
-
             sampleRoom.putExtra("room_name", room_name);
+            sampleRoom.putExtra("roomId", roomIds[position]);
             getActivity().startActivity(sampleRoom);
 
         }
