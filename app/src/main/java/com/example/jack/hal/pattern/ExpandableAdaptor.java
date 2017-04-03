@@ -5,12 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.jack.hal.Global;
 import com.example.jack.hal.R;
 import com.example.jack.hal.services.AsynTaskPatternState;
 
@@ -18,6 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static android.view.FrameMetrics.ANIMATION_DURATION;
 
 /**
  * Created by Jack on 2017-04-02.
@@ -136,12 +141,14 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String patternId = Integer.toString(item.getPatternId());
+                final String patternId = Integer.toString(item.getPatternId());
                 new AsynTaskPatternState().execute(patternId, "delete");
-
                 removeFromPatternlist(patternIds, item.getPatternId());
-
                 patternCollections.remove(item.getPatternId());
+                Log.d("Remove pattern", "Id: " + patternId);
+                Global.patterns.remove(Integer.valueOf(patternId));
+                Log.d("Global patterns", "After removing: " + Global.patterns.toString());
+
 
                 Log.d("Pattern DELETE", patternId.toString());
                 Log.d("Pattern DELETE", patternCollections.toString());
@@ -170,5 +177,33 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
                 iter.remove();
             }
         }
+    }
+
+    private void collapse(final View v, Animation.AnimationListener al) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation anim = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                }
+                else {
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        if (al!=null) {
+            anim.setAnimationListener(al);
+        }
+        anim.setDuration(ANIMATION_DURATION);
+        v.startAnimation(anim);
     }
 }
