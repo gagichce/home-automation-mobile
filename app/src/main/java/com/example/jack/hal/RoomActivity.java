@@ -102,6 +102,9 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                TextView textView =  (TextView) view.findViewById(R.id.room_appliance_name);
+                String deviceName = textView.getText().toString();
+
                 switch (position) {
 
                     default:
@@ -109,6 +112,7 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
                         Intent intent = new Intent(RoomActivity.this, PatternListActivity.class);
                         int deviceId = (Integer)view.getTag();
                         intent.putExtra("deviceId", deviceId);
+                        intent.putExtra("deviceName", deviceName);
                         startActivity(intent);
                         break;
                 }

@@ -90,6 +90,7 @@ public class TabSettingsFragment extends Fragment {
                         break;
                     case 1:
                         Intent intent = new Intent(getActivity(), PatternListActivity.class);
+                        intent.putExtra("deviceName", "All");
                         startActivity(intent);
                         break;
                     case 2:

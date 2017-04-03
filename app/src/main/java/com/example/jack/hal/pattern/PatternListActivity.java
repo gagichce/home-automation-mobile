@@ -31,7 +31,8 @@ public class PatternListActivity extends BaseActivity {
 
     @Override
     protected String getToolBarTitle() {
-        return "Patterns";
+        String deviceName = getIntent().getStringExtra("deviceName");
+        return "Patterns - " + deviceName ;
     }
 
     @Override
