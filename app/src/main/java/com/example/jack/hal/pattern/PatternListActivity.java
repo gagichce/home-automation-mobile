@@ -23,6 +23,7 @@ public class PatternListActivity extends BaseActivity {
 
     private ExpandableListView expandableListView;
     private ExpandableAdaptor expandableAdaptor;
+    private ExpandableDataPump expandableDataPump;
 
     Map<Integer, List<Item>> expandableListDetail;
     List<Integer> patternIds;
@@ -42,11 +43,14 @@ public class PatternListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        int deviceId = getIntent().getIntExtra("deviceId", -1);
+
+        expandableDataPump = new ExpandableDataPump(deviceId);
+
         expandableListView = (ExpandableListView) findViewById(R.id.pattern_listview);
 
-
-        patternIds = new ArrayList<>(Global.patterns.keySet());
-        expandableListDetail = ExpandableDataPump.getData();
+        patternIds = expandableDataPump.getPatternIds();
+        expandableListDetail = expandableDataPump.getData();
 
         expandableAdaptor = new ExpandableAdaptor(this, patternIds, expandableListDetail);
 

@@ -16,12 +16,52 @@ import java.util.Map;
 
 public class ExpandableDataPump {
 
-    public static Map<Integer, List<Item>> getData () {
+    private int deviceId;
+
+    public ExpandableDataPump(int deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public  ArrayList<Integer> getPatternIds() {
+        ArrayList<Integer> ids;
+
+        if (this.deviceId == -1) {
+            ids = new ArrayList<>(Global.patterns.keySet());
+        } else {
+            ids = new ArrayList<>();
+
+            for (Map.Entry<Integer, PatternDescriptor> entry : Global.patterns.entrySet()) {
+
+                if (entry.getValue().getDeviceId() == this.deviceId) {
+                    ids.add(entry.getKey());
+                }
+            }
+        }
+
+        return ids;
+
+    }
+
+    public Map<Integer, List<Item>> getData () {
         HashMap<Integer, List<Item>> expandableListDetail = new
                 HashMap<>();
 
 
-        ArrayList<PatternDescriptor> patternDescriptors = new ArrayList<>(Global.patterns.values());
+        ArrayList<PatternDescriptor> patternDescriptors;
+
+
+        if (this.deviceId == -1) {
+            patternDescriptors = new ArrayList<>(Global.patterns.values());
+        } else {
+            patternDescriptors = new ArrayList<>();
+
+            for (Map.Entry<Integer, PatternDescriptor> entry : Global.patterns.entrySet()) {
+
+                if (entry.getValue().getDeviceId() == this.deviceId) {
+                    patternDescriptors.add(entry.getValue());
+                }
+            }
+        }
 
         for (PatternDescriptor pattern : patternDescriptors) {
             int id = pattern.getId();

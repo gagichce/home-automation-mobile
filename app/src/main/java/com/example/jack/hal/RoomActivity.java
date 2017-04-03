@@ -21,7 +21,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.jack.hal.descriptors.DeviceDescriptor;
+import com.example.jack.hal.descriptors.PatternDescriptor;
 import com.example.jack.hal.descriptors.Status;
+import com.example.jack.hal.pattern.PatternListActivity;
 import com.example.jack.hal.services.AsynDelegate;
 import com.example.jack.hal.services.HttpAsynTask;
 import com.example.jack.hal.services.SocketService;
@@ -101,13 +103,12 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
+
                     default:
                         Log.d("Room listview", "Position " + Integer.toString(position) + " is pressed");
-                        Intent intent = new Intent(RoomActivity.this, LightActivity.class);
+                        Intent intent = new Intent(RoomActivity.this, PatternListActivity.class);
+                        int deviceId = (Integer)view.getTag();
+                        intent.putExtra("deviceId", deviceId);
                         startActivity(intent);
                         break;
                 }
@@ -280,6 +281,8 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
             final ImageButton button = (ImageButton)convertView.findViewById(R.id.room_button);
 
             applianceName.setText(item.getApplianceName());
+
+            convertView.setTag(item.getId());
 
             switch (item.getStatus()) {
                 case OFF:
