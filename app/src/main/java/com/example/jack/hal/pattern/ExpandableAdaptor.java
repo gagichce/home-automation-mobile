@@ -100,6 +100,7 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
         textView.setText(item.getHeader().getLabel());
 
         boolean isChecked = item.getHeader().getStatus() == PatternState.ACTIVE ? true : false;
+        final int patternId = item.getPatternId();
 
         mSwitch.setChecked(isChecked);
 
@@ -110,8 +111,11 @@ public class ExpandableAdaptor extends BaseExpandableListAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     new AsynTaskPatternState().execute(patternID, "on");
+                    Global.updatePatterns(patternId, 1);
                 } else {
                     new AsynTaskPatternState().execute(patternID, "off");
+                    Global.updatePatterns(patternId, 0);
+
                 }
             }
         });

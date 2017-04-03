@@ -10,6 +10,7 @@ import com.example.jack.hal.descriptors.DeviceDescriptor;
 import com.example.jack.hal.descriptors.PatternDescriptor;
 import com.example.jack.hal.descriptors.RoomDescriptor;
 import com.example.jack.hal.descriptors.Status;
+import com.example.jack.hal.pattern.PatternState;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,12 +38,23 @@ public class Global extends Application {
     public static final HashMap<String, String> url = new HashMap<>();
     public static HashMap<String, Status> states = new HashMap<>();
     public static boolean isServerUp = true;
-    public static final String IP = "192.168.254.2";
-    public static final String URL = "http://" + IP;
-    public static final String EMULATOR_LOCALHOST = "10.0.2.2";
     public static final String PORT = "3030";
-//    public static final String EMULATOR_LOCALHOST = "localhost";
-    public static final String STATE_API = "http://" + EMULATOR_LOCALHOST + ":3000/api/current-state";
+
+
+    public static final String IP = "192.168.254.5";
+    public static final String URL = "http://" + IP;
+
+
+//        public static final String EMULATOR_LOCALHOST = "localhost";
+//    public static final String EMULATOR_LOCALHOST = "10.0.2.2";
+    public static final String EMULATOR_LOCALHOST = IP;
+
+//    public static final String STATE_API = "http://" + EMULATOR_LOCALHOST + ":3000/api/current-state";
+
+
+
+    public static final String SERVER_URL = "http://" + EMULATOR_LOCALHOST + ":3030";
+
 
 
     public static Map<Integer, RoomDescriptor> rooms;
@@ -50,8 +62,6 @@ public class Global extends Application {
     public static Map<Integer, PatternDescriptor> patterns;
     public static Map<Integer, Integer> id2position = new HashMap<>();
 
-
-    public ActivityManager activityManager;
     public Context context;
 
 
@@ -172,6 +182,12 @@ public class Global extends Application {
         }
 
         return ret;
+    }
+
+    public static void updatePatterns(int patternId, int stateCode) {
+        PatternState state = PatternState.int2State(stateCode);
+        PatternDescriptor descriptor = Global.patterns.get(patternId);
+        descriptor.setStatus(state);
     }
 
     public static Status[] parseStates(String msg) {

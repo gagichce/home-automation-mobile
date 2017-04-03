@@ -181,7 +181,6 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -313,14 +312,14 @@ public class RoomActivity extends BaseActivity implements AsynDelegate {
                         case OFF:
                             new HttpAsynTask().execute("on", id);
                             item.setStatus(Status.PENDING);
-                            button.setBackgroundColor(Color.YELLOW);
                             break;
                         case ON:
                             new HttpAsynTask().execute("off", id);
                             item.setStatus(Status.PENDING);
-                            button.setBackgroundColor(Color.GREEN);
                             break;
                         case ERROR:
+                            new HttpAsynTask().execute("off", id);
+                            item.setStatus(Status.PENDING);
                             break;
                         case PENDING:
                             break;

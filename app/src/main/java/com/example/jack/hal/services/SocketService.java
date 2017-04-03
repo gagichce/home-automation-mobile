@@ -55,7 +55,7 @@ public class SocketService extends Service {
         Log.d("SockService", "onStartCommand");
         try {
             Log.d("socket", "connecting");
-            mSocket = IO.socket("http://10.0.2.2:3030");
+            mSocket = IO.socket(Global.SERVER_URL);
             mSocket.on("devices patched", this.onStateChange).
                     on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
