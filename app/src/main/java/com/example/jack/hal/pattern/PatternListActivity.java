@@ -56,24 +56,24 @@ public class PatternListActivity extends BaseActivity {
         expandableAdaptor = new ExpandableAdaptor(this, patternIds, expandableListDetail);
 
         expandableListView.setAdapter(expandableAdaptor);
-
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-
-                Log.d("ExpandGroup", "Position " + Integer.toString(groupPosition));
-
-                if (parent.isGroupExpanded(groupPosition)) {
-                    parent.collapseGroup(groupPosition);
-
-                } else {
-                    parent.expandGroup(groupPosition);
-
-                }
-
-                return true;
-            }
-        });
+//
+//        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+//            @Override
+//            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+//
+//                Log.d("ExpandGroup", "Position " + Integer.toString(groupPosition));
+//
+//                if (parent.isGroupExpanded(groupPosition)) {
+//                    parent.collapseGroup(groupPosition);
+//
+//                } else {
+//                    parent.expandGroup(groupPosition);
+//
+//                }
+//
+//                return false;
+//            }
+//        });
 
     }
 
